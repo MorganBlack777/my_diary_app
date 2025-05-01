@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>{% if entry %}Редактировать запись{% else %}Новая запись{% endif %}</h2>
+            <a href="{{ url_for('main.index') }}" class="btn btn-sm btn-outline-secondary">Отмена</a>
+        </div>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control") }}
+                {% if form.title.errors %}
+                    <div class="text-danger">{{ form.title.errors[0] }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                {{ form.content.label(class="form-label") }}
+                {{ form.content(class="form-control auto-resize", rows=10) }}
+                {% if form.content.errors %}
+                    <div class="text-danger">{{ form.content.errors[0] }}</div>
+                {% endif %}
+                <div class="form-text">
+                    Поддерживается Markdown: **жирный**, *курсив*, # Заголовок, [ссылка](http://example.com), 
+                    `код`, > цитата, - список, 1. нумерованный список
+                </div>
+            </div>
+            <div class="mb-3">
+                {{ form.tags.label(class="form-label") }}
+                {{ form.tags(class="form-select", multiple=true) }}
+                <div class="form-text">Удерживайте Ctrl (Cmd на Mac) для выбора нескольких тегов</div>
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Поиск записей</h1>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <form method="POST" class="card">
+            <div class="card-body">
+                {{ form.hidden_tag() }}
+                <div class="input-group">
+                    {{ form.query(class="form-control", placeholder="Введите текст для поиска...") }}
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+                <div class="form-text">Поиск выполняется по заголовкам, содержимому и тегам записей</div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if results %}
+    <h3>Результаты поиска ({{ results|length }})</h3>
+    <div class="row">
+        {% for entry in results %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ entry.title }}</h5>
+                    <p class="card-text text-muted small">{{ entry.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                    <p class="card-text">{{ entry.content[:100] }}{% if entry.content|length > 100 %}...{% endif %}</p>
+                    {% if entry.tags %}
+                        <div class="mb-2">
+                            {% for tag in entry.tags %}
+                                <a href="{{ url_for('main.tag_entries', tag_id=tag.id) }}" class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <a href="{{ url_for('main.entry', id=entry.id) }}" class="btn btn-sm btn-outline-primary">Читать</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% elif request.method == 'POST' %}
+    <div class="alert alert-info">
+        По вашему запросу ничего не найдено.
+    </div>
+{% endif %}
+{% endblock %} 

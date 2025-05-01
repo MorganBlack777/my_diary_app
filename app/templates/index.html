@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Мои записи</h1>
+    <div>
+        <a href="{{ url_for('main.search') }}" class="btn btn-outline-primary me-2">Поиск</a>
+        <a href="{{ url_for('main.new_entry') }}" class="btn btn-primary">Новая запись</a>
+    </div>
+</div>
+
+{% if tag %}
+    <div class="alert alert-info">
+        Записи с тегом: <strong>{{ tag.name }}</strong>
+        <a href="{{ url_for('main.index') }}" class="float-end">Сбросить фильтр</a>
+    </div>
+{% endif %}
+
+{% if entries %}
+    <div class="row">
+        {% for entry in entries %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ entry.title }}</h5>
+                    <p class="card-text text-muted small">{{ entry.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                    <p class="card-text">{{ entry.content[:100] }}{% if entry.content|length > 100 %}...{% endif %}</p>
+                    {% if entry.tags %}
+                        <div class="mb-2">
+                            {% for tag in entry.tags %}
+                                <a href="{{ url_for('main.tag_entries', tag_id=tag.id) }}" class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <a href="{{ url_for('main.entry', id=entry.id) }}" class="btn btn-sm btn-outline-primary">Читать</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        У вас пока нет записей. <a href="{{ url_for('main.new_entry') }}">Создайте первую!</a>
+    </div>
+{% endif %}
+{% endblock %}

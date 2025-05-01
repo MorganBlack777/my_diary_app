@@ -1,0 +1,11 @@
+flask
+flask-sqlalchemy
+flask-login
+flask-wtf
+python-dotenv
+werkzeug
+mistune
+pdfkit
+reportlab
+email_validator
+markupsafe
